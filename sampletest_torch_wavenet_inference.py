@@ -94,8 +94,8 @@ if __name__ == "__main__":
     parser = argparse.ArgumentParser(description="Run WaveNet inference on RF mixtures")
     parser.add_argument("-m", "--M_symbols", type=int, default=50,
                         help="Number of mixture symbols (for folder naming)")
-    parser.add_argument("-d", "--dataset", type=str, default="test",
-                        help="Dataset identifier")
+    # parser.add_argument("-d", "--dataset", type=str, default="test",
+    #                     help="Dataset identifier")
     parser.add_argument("-t", "--test_set", type=str, default="TestSet",
                         help="Test set identifier")
     parser.add_argument("--soi_sig_type", type=str, default="OFDMQPSK",

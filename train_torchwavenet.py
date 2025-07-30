@@ -22,10 +22,7 @@ def _get_free_port():
     with socketserver.TCPServer(('localhost', 0), None) as s:
         return s.server_address[1]
 
-all_datasets = ['OFDMQPSK','QPSK_CommSignal2', 'QPSK2_CommSignal2', 'QAM16_CommSignal2', 'OFDMQPSK_CommSignal2',
-                'QPSK_CommSignal3', 'QPSK2_CommSignal3', 'QAM16_CommSignal3', 'OFDMQPSK_CommSignal3', 'CommSignal2_CommSignal3',
-                'QPSK_EMISignal1', 'QPSK2_EMISignal1', 'QAM16_EMISignal1', 'OFDMQPSK_EMISignal1', 'CommSignal2_EMISignal1',
-                'QPSK_CommSignal5G1', 'QPSK2_CommSignal5G1', 'QAM16_CommSignal5G1', 'OFDMQPSK_CommSignal5G1', 'CommSignal2_CommSignal5G1']
+all_datasets = ['OFDMQPSK']
 
 def main(argv: List[str]):
     parser = ArgumentParser(description="Train a Diffwave model.")
