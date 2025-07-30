@@ -110,7 +110,7 @@ def run_demod_test(soi_type,testset_identifier,M,net):
                     sum_error+=1
                 if x12!=x22:
                     sum_error+=1
-        sum_error=sum_error/(sig_est.shape[0]*sig_est.shape[1])     
+        sum_error=sum_error/(sig_est.shape[0]*sig_est.shape[1]*2)     
 
         return sum_error           
         
@@ -217,11 +217,11 @@ def run_demod_test(soi_type,testset_identifier,M,net):
 if __name__ == "__main__":
     parser = argparse.ArgumentParser(description='check output')
     #parser.add_argument('-l', '--sig_len', default=3200, type=int)
-    parser.add_argument('-m', '--M_symbols', default=50, type=int)
+    parser.add_argument('-m', '--M_symbols', default=1, type=int)
     parser.add_argument('-d', '--dataset', default='test', help='')
     parser.add_argument('-t', '--test_set', default='TestSet', help='')
     parser.add_argument('--soi_sig_type',default='OFDMQPSK', help='')
-    parser.add_argument('--network',default='Wavenet', help='')
+    parser.add_argument('--network',default='unet', help='')
     args = parser.parse_args()
 
     soi_type = args.soi_sig_type

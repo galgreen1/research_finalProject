@@ -16,6 +16,7 @@ B = 10 * 10**6  # Bandwidth and sampling frequency [Hz]
 #L = 4  # Quantization level for sensing
 pi = math.pi
 A = 2*math.sqrt(2)  # Signal amplitude
+
 f = 0  # Baseband frequency
 fc = f  # Carrier frequency
 CP = 16  # Cyclic prefix length
@@ -322,7 +323,7 @@ def create_sig(sigma,m,ps_ratio,n=64,l=4):
     es_sense = estimate_sense(ps_ratio, addedMat,m,l)   
     es_sense = computeCloset_sense(es_sense, quan(S,l))
     es_com = estimate_com(ps_ratio, addedMat, es_sense,m)     
-    #print(f'es com:{es_com}') 
+    print(f'es com:{es_com}') 
     #print(f'com:{com}')  
 
     return es_com,com               
@@ -330,7 +331,7 @@ def create_sig(sigma,m,ps_ratio,n=64,l=4):
 
 
 # if __name__ == '__main__':
-#     create_sig(math.sqrt(1/10),50,0.9999999999)
+create_sig(math.sqrt(1/10),1,1/2)
     
 #     graph1()
 #     graph2()

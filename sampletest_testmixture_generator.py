@@ -97,7 +97,7 @@ if __name__ == "__main__":
     parser = argparse.ArgumentParser(description='Generate Synthetic Dataset')
     parser.add_argument('-l', '--sig_len', default=80, type=int)
     parser.add_argument('-m', '--M_symbols', default=1, type=int)
-    parser.add_argument('-b', '--n_per_batch', default=5120, type=int, help='')
+    parser.add_argument('-b', '--n_per_batch', default=6144, type=int, help='')
     parser.add_argument('-d', '--dataset', default='test', help='')
     parser.add_argument('-t', '--test_set', default='TestSet', help='')
     parser.add_argument('-v', '--verbosity', default=1, help='')

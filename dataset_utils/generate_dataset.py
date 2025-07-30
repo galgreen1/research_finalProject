@@ -44,7 +44,7 @@ def compute_P(ps_ratio):
 
 def get_soi_generation_fn(soi_sig_type):
     if soi_sig_type == 'OFDMQPSK':
-        generate_soi = lambda std,m,p_ratio: rfcutils.create_sig(std,m,p_ratio)
+        generate_soi = lambda std,m,p_ratio: rfcutils.create_signal(std,m,p_ratio)
     else:
         raise Exception("SOI Type not recognized")
     return generate_soi
@@ -88,7 +88,7 @@ def generate_dataset( soi_type, n_per_batch, verbosity,foldername,m):
                     #print(sig_mixture_comp.shape)
                     h5file0.create_dataset('target', data=org_comp)
                     #print(f'saved orig:{org_comp}')
-                    #print(f'saved orig shape:{org_comp.shape}')
+                    print(f'saved orig shape:{org_comp.shape}')
                     #print(sig_target_comp.shape)
                     h5file0.create_dataset('sig_type', data=f'{soi_type}_mixture')
                     print(f"✅ saved h5 file at: {output_path}")
@@ -102,7 +102,7 @@ def generate_dataset( soi_type, n_per_batch, verbosity,foldername,m):
 if __name__ == "__main__":
     parser = argparse.ArgumentParser(description='Generate Synthetic Dataset')
     #parser.add_argument('-l', '--sig_len', default=64, type=int)
-    parser.add_argument('-m', '--M_symbols', default=50, type=int)
+    parser.add_argument('-m', '--M_symbols', default=1, type=int)
     parser.add_argument('-b', '--n_per_batch', default=3000, type=int, help='')
     parser.add_argument('-d', '--dataset', default='train', help='')
     parser.add_argument('-v', '--verbosity', default=1, help='')
