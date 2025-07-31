@@ -1,6 +1,10 @@
 
 
+import tensorflow as tf
 
+gpus = tf.config.list_physical_devices('GPU')
+tf.config.set_visible_devices(gpus[0], 'GPU')
+tf.config.experimental.set_memory_growth(gpus[0], True)
 
 import os, sys
 import glob
@@ -14,7 +18,7 @@ import time
 import pickle
 sys.path.append(os.path.abspath(os.path.join(os.path.dirname(__file__), '..')))
 import rfcutils
-import tensorflow as tf
+
 import math
 
 sigma_SNR = [math.sqrt(1/30),math.sqrt(1/20),math.sqrt(1/10)]  # SNR we will make
@@ -41,7 +45,7 @@ def compute_P(ps_ratio):
 
 def get_soi_generation_fn(soi_sig_type):
     if soi_sig_type == 'OFDMQPSK':
-        generate_soi = lambda std,m,p_ratio: rfcutils.create_sig(std,m,p_ratio)
+        generate_soi = lambda std,m,p_ratio: rfcutils.create_signal(std,m,p_ratio)
     else:
         raise Exception("SOI Type not recognized")
     return generate_soi
@@ -96,7 +100,7 @@ def generate_dataset( soi_type, n_per_batch, verbosity,foldername,m):
 if __name__ == "__main__":
     parser = argparse.ArgumentParser(description='Generate Synthetic Dataset')
     #parser.add_argument('-l', '--sig_len', default=80, type=int)
-    parser.add_argument('-m', '--M_symbols', default=1, type=int)
+    parser.add_argument('-m', '--M_symbols', default=50, type=int)
     parser.add_argument('-b', '--n_per_batch', default=6144, type=int, help='')
     parser.add_argument('-d', '--dataset', default='test', help='')
     parser.add_argument('-t', '--test_set', default='TestSet', help='')

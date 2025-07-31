@@ -33,7 +33,8 @@ from tensorflow.keras.callbacks import ModelCheckpoint, EarlyStopping
 #mirrored_strategy = tf.distribute.MirroredStrategy(devices=["/gpu:0", "/gpu:1"])
 
 
-bsz = 64
+bsz = 16
+
 
 all_datasets = ['create_simulations_dataset_m_1','create_simulations_dataset_m_50']
 
@@ -80,7 +81,7 @@ def train_script(idx):
         print(f'data:{data} target:{target}') 
     
 
-    window_len = 3200
+    window_len = 64
     earlystopping = EarlyStopping(monitor='val_loss', patience=100)
     model_pathname = os.path.join('models/create_simulations_dataset_m_1_unet_M_1', 'checkpoint')
     checkpoint = ModelCheckpoint(filepath=model_pathname, monitor='val_loss', verbose=1, save_best_only=True, mode='min', save_weights_only=True)

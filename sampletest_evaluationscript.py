@@ -11,7 +11,7 @@ import argparse
 
 # 4-QAM symbols 
 qam_symbol = np.array([-1 - 1j, -1 + 1j, 1 - 1j, 1 + 1j])
-qam_symbol=qam_symbol/(math.sqrt(2))
+#qam_symbol=qam_symbol/(math.sqrt(2))
 
 
 # Normalize QAM symbols (we scale them to unit energy)
@@ -55,7 +55,8 @@ def compute_P(ps_ratio):
     return P
 
 def convert_qam_to_bits(x):
-    a = 1 / math.sqrt(2)
+    #a = 1 / math.sqrt(2)
+    a=1
     qam_map = {
         complex(a, a): (0, 0),
         complex(-a, a): (0, 1),

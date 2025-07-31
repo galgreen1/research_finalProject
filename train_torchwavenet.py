@@ -30,7 +30,7 @@ def main(argv: List[str]):
                         help="Index for Mixture Type.")
     parser.add_argument("--config", type=str, default="src/configs/wavenet.yml",
                         help="Configuration file for model.")
-    parser.add_argument("--M", type=int, default=50,
+    parser.add_argument("--M", type=int, default=1,
                         help="Num of symbols.")                    
     args = parser.parse_args(argv[1:-1])
     

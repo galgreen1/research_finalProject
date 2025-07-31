@@ -1,8 +1,4 @@
-# simulations\_rfChallenge
 
-Implementing simulations of a mathematical method for signal separation decribed in J. Wang, Z. Bai, J. Lian, Y. Guo, G. Zhu, and Y. Wang, “A power-domain non-orthogonal integrated sensing and communication waveform design using OFDM,” IEEE Wireless Commun. Lett., 2024.].
-
-Dependencies are detailed in the yml files
 
 # Starter Code Setup: 
 
@@ -15,6 +11,8 @@ cd rfChallange
 
 Now you have all of the files locally
 
+Dependencies are detailed in the yml files
+
 # Helper functions for testing:
 python sampletest_testmixture_generator.py --m[num]
 
@@ -24,6 +22,9 @@ for Wavenet:
 python sampletest_torch_wavenet_inference.py -m[num]
 
 python sampletest_evaluationscript.py -m[num] -network[unet or Wavenet]
+
+# Helper functions for simulation graph:
+python rf_simulations_graphs
 
 # Helper functions for training:
 python dataset_utils/generate_dataset.py --m[num]

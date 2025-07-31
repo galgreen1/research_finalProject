@@ -78,7 +78,7 @@ def run_inference(soi_type,folder_name,M,sig_len):
 if __name__ == "__main__":
     parser = argparse.ArgumentParser(description='Generate Synthetic Dataset')
     parser.add_argument('-l', '--sig_len', default=64, type=int)
-    parser.add_argument('-m', '--M_symbols', default=1, type=int)
+    parser.add_argument('-m', '--M_symbols', default=50, type=int)
     parser.add_argument('-d', '--dataset', default='test', help='')
     parser.add_argument('-t', '--test_set', default='TestSet', help='')
     parser.add_argument('--soi_sig_type',default='OFDMQPSK', help='')
@@ -87,8 +87,9 @@ if __name__ == "__main__":
     soi_type = args.soi_sig_type
     dataset_type = args.dataset
     test_set=args.test_set
-    len=args.sig_len
+    length=args.sig_len
     Ms=args.M_symbols
+    length=length*Ms
     foldername = os.path.join('dataset', f'Dataset_{soi_type}_{dataset_type}_{test_set}_M={Ms}')
 
-    run_inference(soi_type,foldername,Ms,len)
+    run_inference(soi_type,foldername,Ms,length)

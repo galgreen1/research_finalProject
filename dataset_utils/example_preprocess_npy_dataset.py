@@ -28,7 +28,7 @@ def preprocess_dataset(root_dir: str, save_dir: str) -> None:
 
 if __name__ == "__main__":
     parser = argparse.ArgumentParser(description='Generate Synthetic Dataset')
-    parser.add_argument('-m', '--M_symbols', default=1, type=int)
+    parser.add_argument('-m', '--M_symbols', default=50, type=int)
     parser.add_argument('--soi_sig_type',default='OFDMQPSK', help='')
     args = parser.parse_args()
 
