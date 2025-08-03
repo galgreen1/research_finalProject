@@ -38,7 +38,7 @@ def computeClosest(es_com):
 
 
 def calculate_ps_ratios_db():
-    ps_ratios_db = np.linspace(0, 30, 30)  # Extend range to 30 dB
+    ps_ratios_db = np.linspace(0, 30, 24)  # Extend range to 30 dB
     ps_ratios = 10 ** (ps_ratios_db / 10)
     return ps_ratios, ps_ratios_db
 
@@ -99,7 +99,7 @@ def run_demod_test(soi_type,testset_identifier,M,net):
 
         
 
-        sum_error=0
+        sum_error = np.float32(0.0)
         #print(f'sig est:{sig_est}')
         #print(f'sig:{sig_soi}')
         for i in range(sig_est.shape[0]):
@@ -146,85 +146,116 @@ def run_demod_test(soi_type,testset_identifier,M,net):
 
             #print(f'sig: {sig.shape}')
             path=os.path.join( foldername, f"estimated_soi_{soi_type}_p{p:.5f}_SNR{1/(j**2):.2f}.npy")
-            # if net=='Wavenet':
-            #     path=os.path.join( foldername, f"Wavenet_estimated_soi_{soi_type}_p{p:.5f}_SNR{1/(j**2):.2f}.npy")
-            #     print("WAVENET network")
-            # sig_est=np.load(path)
+            if net=='Wavenet':
+                path=os.path.join( foldername, f"Wavenet_estimated_soi_{soi_type}_p{p:.5f}_SNR{1/(j**2):.2f}.npy")
+                print("WAVENET network")
+            sig_est=np.load(path)
             
-            # print(f'sig_est: {sig_est.shape}')
-            # assert ~np.isnan(sig_est).any(), 'NaN or Inf in Signal estimate load'
+            print(f'sig_est: {sig_est.shape}')
+            assert ~np.isnan(sig_est).any(), 'NaN or Inf in Signal estimate load'
             
             #print(sig_est.shape)
             ber_com = 0
-            ber_sen = 0
+            ber=0
+            count = np.float32(0.0)
+            count_check=np.float32(0.0)
+           
 
             for num in range(sig.shape[0]):  # num of signals
              # Handle 1D input explicitly here:
-                if sig.ndim == 1:
-                    sig = sig[np.newaxis, :]
-                    #sig_est = sig_est[np.newaxis, :]
-                    check = check[np.newaxis, :]
-                check_com = np.zeros_like(check[num], dtype=float)    
-                check_symbols=computeClosest(check[num])
-                for place in range(check_symbols.shape[0]):
-                    a1, a2 = convert_qam_to_bits(check_symbols[place])
-                    b1, b2 = convert_qam_to_bits(sig[num][place])
-                    x1 = a1 - b1
-                    x2 = a2 - b2
-                        # x1, x2 = convert_qam_to_bits(closest_symbols[i][j]) - convert_qam_to_bits(com[i][j])
-                    if x1 != 0 and x2 != 0:
-                        check_com[place] = 2
-                            # print("2:")
-                            # print(convert_qam_to_bits(closest_symbols[i][j]))
-                            # print(convert_qam_to_bits(com[i][j]))
+                # if sig.ndim == 1:
+                #     sig = sig[np.newaxis, :]
+                #     sig_est = sig_est[np.newaxis, :]
+                #     check = check[np.newaxis, :]
+                # check_com = np.zeros_like(check[num], dtype=float) 
+                # check_signal=  np.zeros_like(check[num], dtype=float)  
+                # check_symbols=computeClosest(check[num])
+                # symbols=computeClosest(sig_est[num])
+                # for place in range(check_symbols.shape[0]):
+                #     a1, a2 = convert_qam_to_bits(check_symbols[place])
+                #     b1, b2 = convert_qam_to_bits(sig[num][place])
+                #     c1, c2 = convert_qam_to_bits(symbols[place])
+                    
+                #     x1 = a1 - b1
+                #     x2 = a2 - b2
+                #     x3=c1-b1
+                #     x4=c2-b2
+                #         # x1, x2 = convert_qam_to_bits(closest_symbols[i][j]) - convert_qam_to_bits(com[i][j])
+                #     if x3 != 0 and x4 != 0:
+                #         check_signal[place] = 2
+                #             # print("2:")
+                #             # print(convert_qam_to_bits(closest_symbols[i][j]))
+                #             # print(convert_qam_to_bits(com[i][j]))
 
-                    else:
-                        if x1 != 0 or x2 != 0:
-                            check_com[place] = 1
-                                # print("1:")
-                                # print(convert_qam_to_bits(closest_symbols[i][j]))
-                                # print(convert_qam_to_bits(com[i][j]))
-                        else:
-                            check_com[place] = 0
-                sum_com = 0
-                for place in range(check_symbols.shape[0]):
-                        sum_com = sum_com + check_com[place]    
-                ber_com = ber_com + (sum_com / ((2 * (check_symbols.shape[0]))))        
-            ber_com=ber_com/sig.shape[0]          
+                #     else:
+                #         if x3 != 0 or x4 != 0:
+                #             check_signal[place] = 1
+                #                 # print("1:")
+                #                 # print(convert_qam_to_bits(closest_symbols[i][j]))
+                #                 # print(convert_qam_to_bits(com[i][j]))
+                #         else:
+                #             check_signal[place] = 0
+                    
+                #     if x1 != 0 and x2 != 0:
+                #         check_com[place] = 2
+                #             # print("2:")
+                #             # print(convert_qam_to_bits(closest_symbols[i][j]))
+                #             # print(convert_qam_to_bits(com[i][j]))
 
-                #count+=compute_ber(sig_est[num],sig[num])
-                #count_check+=compute_ber(check[num],sig[num])
+                #     else:
+                #         if x1 != 0 or x2 != 0:
+                #             check_com[place] = 1
+                #                 # print("1:")
+                #                 # print(convert_qam_to_bits(closest_symbols[i][j]))
+                #                 # print(convert_qam_to_bits(com[i][j]))
+                #         else:
+                #             check_com[place] = 0
+                # sum_com = 0
+                # sum_sig=0
+                # for place in range(check_symbols.shape[0]):
+                #         sum_com = sum_com + check_com[place]    
+                #         sum_sig=sum_sig+check_signal[place]
+                # ber_com = ber_com + (sum_com / ((2 * (check_symbols.shape[0])))) 
+                # ber = ber + (sum_sig / ((2 * (check_symbols.shape[0]))))         
+                count+=compute_ber(sig_est[num],sig[num])
+                count_check+=compute_ber(check[num],sig[num])      
+            # ber_com=ber_com/sig.shape[0]  
+            # ber=ber/sig.shape[0]          
+
+               
                 
-            #count=count/sig.shape[0]   # error for certain p and SNR  
-            count_check=ber_com
-            #print(f'error for SNR={j} and p={p} is {count} and count check:{count_check}')
-            print(f'error for SNR={j} and p={p} is count check:{count_check}')
+            #count=ber  # error for certain p and SNR  
+            #count_check=ber_com
+            count=count/sig.shape[0]
+            count_check/=sig.shape[0]
+            print(f'error for SNR={j} and p={p} is {count:.16f} and count check:{count_check}')
+            #print(f'error for SNR={j} and p={p} is count check:{count_check}')
             #print(f'counter:{count}')
-            #save_error[a][i]=count 
+            save_error[a][i]=count 
             save_error_check[a][i]=count_check
     # now to print graph: 
-    #x1=save_error[0]
+    x1=save_error[0]
     a1=save_error_check[0]
-    #a2=save_error_check[1]
-    #a3=save_error_check[2]
+    # a2=save_error_check[1]
+    # a3=save_error_check[2]
     #print(f'x:{x1}')
-    #x2=save_error[1]
-    #x3=save_error[2]
+    # x2=save_error[1]
+    # x3=save_error[2]
     plt.figure(figsize=(10, 6))
     #plt.plot(ps_ratios_db, x1, label=f"Com: SNR=80dB M=1  ",color='blue')
 
-    # plt.plot(ps_ratios_db, x1, label=f"Com: SNR=30dB M={M} network={net} ",color='blue')
+    plt.plot(ps_ratios_db, x1, label=f"Com: SNR=30dB M={M} network={net} ",color='blue')
     # plt.plot(ps_ratios_db, x2, label=f"Com: SNR=20dB M={M} network={net}", color='green')
     # plt.plot(ps_ratios_db, x3,  label=f"Com: SNR=10dB M={M}  network={net}", color='red')
 
     plt.plot(ps_ratios_db, a1, label=f"Com: SNR=30dB M={M}  simulation",color='blue',linestyle='--')
-    #plt.plot(ps_ratios_db, a2, label=f"Com: SNR=20dB M={M} simulation", color='green',linestyle='--')
-    #plt.plot(ps_ratios_db, a3,  label=f"Com: SNR=10dB M={M}  simulation", color='red',linestyle='--')
+    # plt.plot(ps_ratios_db, a2, label=f"Com: SNR=20dB M={M} simulation", color='green',linestyle='--')
+    # plt.plot(ps_ratios_db, a3,  label=f"Com: SNR=10dB M={M}  simulation", color='red',linestyle='--')
     #print(f'x1:{x1}')
 
     plt.yscale("log")
     plt.xlim(0, 30)
-    plt.ylim(1e-5, 1)
+    plt.ylim(1e-7, 1)
     plt.title("BER as a Function of $P_s/(1-P_s)")
     plt.xlabel("$P_s/(1-P_s)$ (dB)")
     plt.ylabel("BER")
@@ -237,10 +268,10 @@ def run_demod_test(soi_type,testset_identifier,M,net):
     os.makedirs(os.path.dirname(output_path), exist_ok=True)
     plt.savefig(output_path, dpi=300, bbox_inches='tight')
     error_save_path = f"/home/dsi/galgreen/tmp/rfchallenge/graphs/save_error_M={M}_net={net}.npy"
-    #np.save(error_save_path, save_error)
+    np.save(error_save_path, save_error)
     print(f"Saved BER matrix to: {error_save_path}")
     error_check_save_path = f"/home/dsi/galgreen/tmp/rfchallenge/graphs/save_error_check_M={M}_net={net}.npy"
-    #np.save(error_check_save_path, save_error_check)
+    np.save(error_check_save_path, save_error_check)
     print(f"Saved BER matrix to: {error_check_save_path}")
     plt.close()
      
@@ -250,17 +281,15 @@ if __name__ == "__main__":
     #parser.add_argument('-l', '--sig_len', default=3200, type=int)
     parser.add_argument('-m', '--M_symbols', default=1, type=int)
     parser.add_argument('-d', '--dataset', default='test', help='')
-    parser.add_argument('-t', '--test_set', default='TestSet', help='')
     parser.add_argument('--soi_sig_type',default='OFDMQPSK', help='')
     parser.add_argument('--network',default='unet', help='')
     args = parser.parse_args()
 
     soi_type = args.soi_sig_type
     dataset_type = args.dataset
-    test_set=args.test_set
     Ms=args.M_symbols
     net=args.network
-    foldername = os.path.join('dataset', f'Dataset_{soi_type}_{dataset_type}_{test_set}_M={Ms}')
+    foldername = os.path.join('dataset', f'Dataset_{soi_type}_{dataset_type}_Mixture_M={Ms}')
   
     run_demod_test(soi_type,foldername,Ms,net)
     

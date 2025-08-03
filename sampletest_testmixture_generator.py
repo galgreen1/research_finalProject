@@ -277,7 +277,7 @@ def simulation(sigma, m, l,foldername):
     ber_com_results = []
 
     ber_sen_results = []
-    times = 3000
+    times = 6000
     tot=times*len(ps_ratios)
     with tqdm(total=tot, desc="Total Progress") as pbar:
         for ps_ratio in ps_ratios:
@@ -379,23 +379,19 @@ def simulation(sigma, m, l,foldername):
             org_comp = np.stack([np.real(sig_orig_batch), np.imag(sig_orig_batch)], axis=-1)
             sig_comp = tf.convert_to_tensor(sig_comp, dtype=tf.float32)
             org_comp = tf.convert_to_tensor(org_comp, dtype=tf.float32)
-            mixture_filename = f'OFDMQPSK_mixture_p{p:.5f}_SNR{1/(sigma**2):.2f}.h5'
             if not os.path.exists(os.path.join(foldername)):
                 os.makedirs(os.path.join(foldername))
-            output_path = os.path.join( foldername, mixture_filename)  
-            with h5py.File(os.path.join(foldername, mixture_filename), 'w') as h5file0:
-                h5file0.create_dataset('mixture', data=sig_comp)
-                    #print(f'saved mixture:{sig_comp}')
-               
-                    #print(sig_mixture_comp.shape)
-                h5file0.create_dataset('target', data=org_comp)
-                    #print(f'saved orig:{org_comp}')
-                #print(f'saved orig shape:{org_comp.shape}')
-                    #print(sig_target_comp.shape)
-                h5file0.create_dataset('sig_type', data=f'OFDMQPSK_mixture')
-                print(f"✅ saved h5 file at: {output_path}") 
-            del sig_comp, org_comp    
-            # ber_sen_results.append(ber_sen / times)
+           
+            filename_mixture=os.path.join( foldername, f"testmixture_OFDMQPSK_p{p:.5f}_SNR{1/(sigma**2):.2f}.npy")    
+            filename_target =  os.path.join( foldername, f"testsymbols_OFDMQPSK_p{p:.5f}_SNR{1/(sigma**2):.2f}.npy") 
+                # if i==ps_ratios[0]:
+                #     print(f'mix:{sig_comp}  orig:{org_comp}')   
+
+            np.save(filename_mixture, sig_comp)
+            np.save(filename_target, org_comp)
+                #print(f'mixture:{sig_comp.shape} {sig_comp}')
+                #print(f'orig:{org_comp.shape}  {org_comp}')
+            print(f"✅ saved test files at: {foldername}") 
 
     # return ber_com_results,ber_sen_results
     return ber_com_results
@@ -405,7 +401,7 @@ def graph1():
     parser = argparse.ArgumentParser(description='Generate Synthetic Dataset')
     #parser.add_argument('-l', '--sig_len', default=64, type=int)
     parser.add_argument('-m', '--M_symbols', default=1, type=int)
-    parser.add_argument('-b', '--n_per_batch', default=3000, type=int, help='')
+    #parser.add_argument('-b', '--n_per_batch', default=3000, type=int, help='')
     parser.add_argument('-d', '--dataset', default='test', help='')
     parser.add_argument('-v', '--verbosity', default=1, help='')
     parser.add_argument('--soi_sig_type',default='OFDMQPSK', help='')
@@ -445,7 +441,7 @@ def graph1():
     plt.ylabel("BER")
     plt.grid(which="both")
     plt.legend(loc='best')
-    output_path = "outputs/ber_plot1_check_test.png"
+    output_path = "outputs/ber_plot1_check.png"
     plt.savefig(output_path, dpi=300, bbox_inches='tight')
     plt.close()
 
@@ -457,7 +453,7 @@ def graph1():
     ]).T
     
     header_line = "ps_db\tBER_30dB_M50\tBER_20dB_M50\tBER_10dB_M50\tBER_10dB_M1"
-    np.savetxt("outputs/outputs1_check_test.txt", data_matrix, fmt="%.6e", header=header_line, delimiter="\t", comments="")
+    np.savetxt("outputs/outputs1_check.txt", data_matrix, fmt="%.6e", header=header_line, delimiter="\t", comments="")
 
 
 
@@ -467,3 +463,4 @@ if __name__ == '__main__':
     
 
 # See PyCharm help at https://www.j
+

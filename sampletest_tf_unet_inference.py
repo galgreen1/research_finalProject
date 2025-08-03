@@ -21,7 +21,7 @@ sigma_SNR = [math.sqrt(1/30),math.sqrt(1/20),math.sqrt(1/10)]  # SNR we will mak
 #sigma_SNR = [math.sqrt(1/30)]
 
 def calculate_ps_ratios_db():
-    ps_ratios_db = np.linspace(0, 30, 30)  # Extend range to 30 dB
+    ps_ratios_db = np.linspace(0, 30, 24)  # Extend range to 30 dB
     ps_ratios = 10 ** (ps_ratios_db / 10)
     ps_values = ps_ratios / (1 + ps_ratios)
     return ps_ratios, ps_ratios_db
@@ -80,16 +80,14 @@ if __name__ == "__main__":
     parser.add_argument('-l', '--sig_len', default=64, type=int)
     parser.add_argument('-m', '--M_symbols', default=1, type=int)
     parser.add_argument('-d', '--dataset', default='test', help='')
-    parser.add_argument('-t', '--test_set', default='TestSet', help='')
     parser.add_argument('--soi_sig_type',default='OFDMQPSK', help='')
     args = parser.parse_args()
 
     soi_type = args.soi_sig_type
     dataset_type = args.dataset
-    test_set=args.test_set
     length=args.sig_len
     Ms=args.M_symbols
     length=length*Ms
-    foldername = os.path.join('dataset', f'Dataset_{soi_type}_{dataset_type}_{test_set}_M={Ms}')
+    foldername = os.path.join('dataset', f'Dataset_{soi_type}_{dataset_type}_Mixture_M={Ms}')
 
     run_inference(soi_type,foldername,Ms,length)

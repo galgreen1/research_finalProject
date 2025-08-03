@@ -293,8 +293,9 @@ def simulation(sigma, m, l):
     ber_com_results = []
 
     ber_sen_results = []
-    times = 3000
-    with tqdm(total=300000, desc="Total Progress") as pbar:
+    times = 5000
+    tot=times*len(ps_ratios)
+    with tqdm(total=tot, desc="Total Progress") as pbar:
         for ps_ratio in ps_ratios:
             # ps_ratio=math.pow(10,-1)
             ber_com = 0
@@ -387,12 +388,12 @@ def simulation(sigma, m, l):
 
 def graph1():
     l = 4
-    # sigma = math.sqrt(1 / 30)
-    # x1 = simulation(sigma, 50, l)
-    # sigma = math.sqrt(1 / 20)
-    # a1 = simulation(sigma, 50, l)
-    # sigma = math.sqrt(1 / 10)
-    # z1 = simulation(sigma, 50, l)
+    sigma = math.sqrt(1 / 30)
+    x1 = simulation(sigma, 50, l)
+    sigma = math.sqrt(1 / 20)
+    a1 = simulation(sigma, 50, l)
+    sigma = math.sqrt(1 / 10)
+    z1 = simulation(sigma, 50, l)
     sigma = math.sqrt(1 / 10)
     c1 = simulation(sigma, 1, l)
     ps_ratios, ps_ratios_db = calculate_ps_ratios_db()
@@ -400,9 +401,9 @@ def graph1():
     # plot
     plt.figure(figsize=(10, 6))
 
-    # plt.plot(ps_ratios_db, x1, 'b-o', label=f"Com: SNR=30dB M=50  L={l}", color='blue')
-    # plt.plot(ps_ratios_db, a1, 'b-o', label=f"Com: SNR=20dB M=50  L={l}", color='green')
-    #plt.plot(ps_ratios_db, z1, 'b-o', label=f"Com: SNR=10dB M=50  L={l}", color='red')
+    plt.plot(ps_ratios_db, x1, 'b-o', label=f"Com: SNR=30dB M=50  L={l}", color='blue')
+    plt.plot(ps_ratios_db, a1, 'b-o', label=f"Com: SNR=20dB M=50  L={l}", color='green')
+    plt.plot(ps_ratios_db, z1, 'b-o', label=f"Com: SNR=10dB M=50  L={l}", color='red')
     plt.plot(ps_ratios_db, c1, 'b-o', label=f"Com: SNR=10dB M=1  L={l}", color='yellow')
     # plt.plot(ps_ratios_db, ber_sen_results, 'r-s', label="Sen: SNR=30dB")
 
@@ -418,16 +419,16 @@ def graph1():
     plt.savefig(output_path, dpi=300, bbox_inches='tight')
     plt.close()
 
-    # data_matrix = np.vstack([
-    #     ps_ratios_db,
-    #     np.array(x1),
-    #     np.array(a1),
-    #     np.array(z1),
-    #     np.array(c1)
-    # ]).T
-    #
-    # header_line = "ps_db\tBER_30dB_M50\tBER_20dB_M50\tBER_10dB_M50\tBER_10dB_M1"
-    # np.savetxt("outputs/outputs1.txt", data_matrix, fmt="%.6e", header=header_line, delimiter="\t", comments="")
+    data_matrix = np.vstack([
+        ps_ratios_db,
+        np.array(x1),
+        np.array(a1),
+        np.array(z1),
+        np.array(c1)
+    ]).T
+    
+    header_line = "ps_db\tBER_30dB_M50\tBER_20dB_M50\tBER_10dB_M50\tBER_10dB_M1"
+    np.savetxt("outputs/outputs1.txt", data_matrix, fmt="%.6e", header=header_line, delimiter="\t", comments="")
 
 
 def graph2():
@@ -477,6 +478,6 @@ def graph2():
 # Press the green button in the gutter to run the script.
 if __name__ == '__main__':
     graph1()
-    #graph2()
+    graph2()
 
 # See PyCharm help at https://www.j

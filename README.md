@@ -19,7 +19,7 @@ python sampletest_testmixture_generator.py --m[num]
 for Unet:
 python sampletest_tf_unet_inference.py -m[num] -l[length]
 for Wavenet:
-python sampletest_torch_wavenet_inference.py -m[num]
+python /home/dsi/galgreen/tmp/rfchallenge/train_torchwavenet.py   --sigindex 0   --config src/configs/wavenet.yml   --M [num]   ""
 
 python sampletest_evaluationscript.py -m[num] -network[unet or Wavenet]
 
