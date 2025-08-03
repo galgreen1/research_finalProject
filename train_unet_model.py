@@ -33,7 +33,7 @@ from tensorflow.keras.callbacks import ModelCheckpoint, EarlyStopping
 #mirrored_strategy = tf.distribute.MirroredStrategy(devices=["/gpu:0", "/gpu:1"])
 
 
-bsz = 16
+bsz = 64
 
 
 all_datasets = ['create_simulations_dataset_m_1','create_simulations_dataset_m_50']
@@ -78,7 +78,7 @@ def train_script(idx):
      
     for data, target in ds_train.take(1):  # Take just the first batch
         print("Training batch shape (data, target):", data.shape, target.shape) 
-        print(f'data:{data} target:{target}') 
+        #print(f'data:{data} target:{target}') 
     
 
     window_len = 64

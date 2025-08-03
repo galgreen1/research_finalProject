@@ -15,8 +15,8 @@ qam_symbol = np.array([-1 - 1j, -1 + 1j, 1 - 1j, 1 + 1j])
 
 
 # Normalize QAM symbols (we scale them to unit energy)
-sigma_SNR = [math.sqrt(1/30),math.sqrt(1/20),math.sqrt(1/10)]  # SNR we will make
-#sigma_SNR = [math.sqrt(1/80)]
+#sigma_SNR = [math.sqrt(1/30),math.sqrt(1/20),math.sqrt(1/10)]  # SNR we will make
+sigma_SNR = [math.sqrt(1/10)]
 
 # for a whole signal compute the closet 4QAM
 def computeClosest(es_com):
@@ -146,50 +146,80 @@ def run_demod_test(soi_type,testset_identifier,M,net):
 
             #print(f'sig: {sig.shape}')
             path=os.path.join( foldername, f"estimated_soi_{soi_type}_p{p:.5f}_SNR{1/(j**2):.2f}.npy")
-            if net=='Wavenet':
-                path=os.path.join( foldername, f"Wavenet_estimated_soi_{soi_type}_p{p:.5f}_SNR{1/(j**2):.2f}.npy")
-                print("WAVENET network")
-            sig_est=np.load(path)
+            # if net=='Wavenet':
+            #     path=os.path.join( foldername, f"Wavenet_estimated_soi_{soi_type}_p{p:.5f}_SNR{1/(j**2):.2f}.npy")
+            #     print("WAVENET network")
+            # sig_est=np.load(path)
             
-            print(f'sig_est: {sig_est.shape}')
-            assert ~np.isnan(sig_est).any(), 'NaN or Inf in Signal estimate load'
+            # print(f'sig_est: {sig_est.shape}')
+            # assert ~np.isnan(sig_est).any(), 'NaN or Inf in Signal estimate load'
             
             #print(sig_est.shape)
-            count_check=0
-            count=0
+            ber_com = 0
+            ber_sen = 0
+
             for num in range(sig.shape[0]):  # num of signals
              # Handle 1D input explicitly here:
                 if sig.ndim == 1:
                     sig = sig[np.newaxis, :]
-                    sig_est = sig_est[np.newaxis, :]
+                    #sig_est = sig_est[np.newaxis, :]
                     check = check[np.newaxis, :]
-                count+=compute_ber(sig_est[num],sig[num])
-                count_check+=compute_ber(check[num],sig[num])
+                check_com = np.zeros_like(check[num], dtype=float)    
+                check_symbols=computeClosest(check[num])
+                for place in range(check_symbols.shape[0]):
+                    a1, a2 = convert_qam_to_bits(check_symbols[place])
+                    b1, b2 = convert_qam_to_bits(sig[num][place])
+                    x1 = a1 - b1
+                    x2 = a2 - b2
+                        # x1, x2 = convert_qam_to_bits(closest_symbols[i][j]) - convert_qam_to_bits(com[i][j])
+                    if x1 != 0 and x2 != 0:
+                        check_com[place] = 2
+                            # print("2:")
+                            # print(convert_qam_to_bits(closest_symbols[i][j]))
+                            # print(convert_qam_to_bits(com[i][j]))
+
+                    else:
+                        if x1 != 0 or x2 != 0:
+                            check_com[place] = 1
+                                # print("1:")
+                                # print(convert_qam_to_bits(closest_symbols[i][j]))
+                                # print(convert_qam_to_bits(com[i][j]))
+                        else:
+                            check_com[place] = 0
+                sum_com = 0
+                for place in range(check_symbols.shape[0]):
+                        sum_com = sum_com + check_com[place]    
+                ber_com = ber_com + (sum_com / ((2 * (check_symbols.shape[0]))))        
+            ber_com=ber_com/sig.shape[0]          
+
+                #count+=compute_ber(sig_est[num],sig[num])
+                #count_check+=compute_ber(check[num],sig[num])
                 
-            count=count/sig.shape[0]   # error for certain p and SNR  
-            count_check=count_check/sig.shape[0]
-            print(f'error for SNR={j} and p={p} is {count} and count check:{count_check}')
+            #count=count/sig.shape[0]   # error for certain p and SNR  
+            count_check=ber_com
+            #print(f'error for SNR={j} and p={p} is {count} and count check:{count_check}')
+            print(f'error for SNR={j} and p={p} is count check:{count_check}')
             #print(f'counter:{count}')
-            save_error[a][i]=count 
+            #save_error[a][i]=count 
             save_error_check[a][i]=count_check
     # now to print graph: 
-    x1=save_error[0]
+    #x1=save_error[0]
     a1=save_error_check[0]
-    a2=save_error_check[1]
-    a3=save_error_check[2]
+    #a2=save_error_check[1]
+    #a3=save_error_check[2]
     #print(f'x:{x1}')
-    x2=save_error[1]
-    x3=save_error[2]
+    #x2=save_error[1]
+    #x3=save_error[2]
     plt.figure(figsize=(10, 6))
     #plt.plot(ps_ratios_db, x1, label=f"Com: SNR=80dB M=1  ",color='blue')
 
-    plt.plot(ps_ratios_db, x1, label=f"Com: SNR=30dB M={M} network={net} ",color='blue')
-    plt.plot(ps_ratios_db, x2, label=f"Com: SNR=20dB M={M} network={net}", color='green')
-    plt.plot(ps_ratios_db, x3,  label=f"Com: SNR=10dB M={M}  network={net}", color='red')
+    # plt.plot(ps_ratios_db, x1, label=f"Com: SNR=30dB M={M} network={net} ",color='blue')
+    # plt.plot(ps_ratios_db, x2, label=f"Com: SNR=20dB M={M} network={net}", color='green')
+    # plt.plot(ps_ratios_db, x3,  label=f"Com: SNR=10dB M={M}  network={net}", color='red')
 
     plt.plot(ps_ratios_db, a1, label=f"Com: SNR=30dB M={M}  simulation",color='blue',linestyle='--')
-    plt.plot(ps_ratios_db, a2, label=f"Com: SNR=20dB M={M} simulation", color='green',linestyle='--')
-    plt.plot(ps_ratios_db, a3,  label=f"Com: SNR=10dB M={M}  simulation", color='red',linestyle='--')
+    #plt.plot(ps_ratios_db, a2, label=f"Com: SNR=20dB M={M} simulation", color='green',linestyle='--')
+    #plt.plot(ps_ratios_db, a3,  label=f"Com: SNR=10dB M={M}  simulation", color='red',linestyle='--')
     #print(f'x1:{x1}')
 
     plt.yscale("log")
@@ -203,14 +233,14 @@ def run_demod_test(soi_type,testset_identifier,M,net):
     plt.show()
     # and save results  
     
-    output_path = f"/home/dsi/galgreen/tmp/rfchallenge/graphs/ber_plot_M={M}_net={net}.png"
+    output_path = f"/home/dsi/galgreen/tmp/rfchallenge/graphs/ber_plot_M={M}_net={net}_check.png"
     os.makedirs(os.path.dirname(output_path), exist_ok=True)
     plt.savefig(output_path, dpi=300, bbox_inches='tight')
     error_save_path = f"/home/dsi/galgreen/tmp/rfchallenge/graphs/save_error_M={M}_net={net}.npy"
-    np.save(error_save_path, save_error)
+    #np.save(error_save_path, save_error)
     print(f"Saved BER matrix to: {error_save_path}")
     error_check_save_path = f"/home/dsi/galgreen/tmp/rfchallenge/graphs/save_error_check_M={M}_net={net}.npy"
-    np.save(error_check_save_path, save_error_check)
+    #np.save(error_check_save_path, save_error_check)
     print(f"Saved BER matrix to: {error_check_save_path}")
     plt.close()
      
