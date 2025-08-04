@@ -5,6 +5,8 @@ npydataset/
 npydataset1/
 model/
 wandb/
+model/
+rfcutils/
 torchmodels/
 torchmodels1/
 torchmodels_old/

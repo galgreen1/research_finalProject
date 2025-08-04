@@ -14,7 +14,6 @@ from tqdm import tqdm
 import time
 import pickle
 sys.path.append(os.path.abspath(os.path.join(os.path.dirname(__file__), '..')))
-import rfcutils
 #import tensorflow as tf
 import math
 import math
@@ -277,7 +276,7 @@ def simulation(sigma, m, l,foldername):
     ber_com_results = []
 
     ber_sen_results = []
-    times = 3000
+    times = 1
     tot=times*len(ps_ratios)
     with tqdm(total=tot, desc="Total Progress") as pbar:
         for ps_ratio in ps_ratios:
