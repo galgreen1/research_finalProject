@@ -21,8 +21,8 @@ python sampletest_tf_unet_inference.py -m[num] -l[length]
 for Wavenet:
 python /home/dsi/galgreen/tmp/rfchallenge/train_torchwavenet.py   --sigindex 0   --config src/configs/wavenet.yml   --M [num]   ""
 
-python sampletest_evaluationscript.py -m[num] -network[unet or Wavenet]
-or python faster_evaluation.py -m[num] -network[unet or Wavenet] for faster evaluation
+python sampletest_evaluationscript.py -m[num] 
+or python faster_evaluation.py -m[num]  for faster evaluation
 
 # Helper functions for simulation graph:
 python rf_simulations_graphs
@@ -39,7 +39,7 @@ tfds build /home/dsi/galgreen/tmp/rfchallenge/dataset_utils/tfds_scripts/create_
 for Wavenet:
 python dataset_utils/example_preprocess_npy_dataset.py -m[num]
 
-python sampletest_evaluationscript.py -m[num] -network[unet or Wavenet]
+python sampletest_evaluationscript.py -m[num] 
 
 python train_unet_model.py [index]
 python train_torchwavenet.py -m[num]
