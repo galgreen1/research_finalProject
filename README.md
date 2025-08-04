@@ -28,6 +28,8 @@ or python faster_evaluation.py -m[num] -network[unet or Wavenet] for faster eval
 python rf_simulations_graphs
 
 # Helper functions for training:
+Please note that the training is tracked using WANDB. If you want to do this, you will need to connect to your user, and if not, simply remove the parts where WANDB appears.
+
 python dataset_utils/generate_dataset.py --m[num]
 
 for Unet:
