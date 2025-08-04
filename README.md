@@ -47,7 +47,7 @@ python train_torchwavenet.py -m[num]
 
 
 
-Trained model weights for the UNet and WaveNet can be obtained under models folder
+Trained model weights for the UNet can be obtained under models folder
 Final outputs under outputs folder
 
 
