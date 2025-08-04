@@ -27,8 +27,7 @@ class DataConfig:
 @dataclass
 class DistributedConfig:
     distributed: bool = False
-    world_size: int = 1
-    # world_size: int = 2
+    world_size: int = 2
 
 
 @dataclass

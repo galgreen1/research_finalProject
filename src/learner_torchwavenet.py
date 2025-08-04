@@ -13,7 +13,6 @@
 # limitations under the License.
 # ==============================================================================
 import os
-import wandb
 
 import matplotlib.pyplot as plt
 import numpy as np
@@ -75,7 +74,6 @@ class WaveLearner:
 
         self.loss_fn = nn.MSELoss()
         self.writer = SummaryWriter(self.model_dir)
-        
 
     @property
     def is_master(self):
@@ -174,11 +172,6 @@ class WaveLearner:
                         self.writer.add_scalar('train/loss', loss, self.step)
                         self.writer.add_scalar(
                             'train/grad_norm', self.grad_norm, self.step)
-                        wandb.log({
-                            'train/loss': loss.item(),
-                            'train/grad_norm': self.grad_norm,
-                            'step': self.step
-                        })    
                     if self.step % self.save_every == 0:
                         self.save_to_checkpoint()
 
@@ -186,11 +179,6 @@ class WaveLearner:
                     val_loss = self.validate()
                     # Update the learning rate if it plateus
                     self.lr_scheduler.step(val_loss)
-                    wandb.log({
-                        'val/loss': val_loss.item(),
-                        'step': self.step
-                    })
-
 
                 if self.distributed:
                     dist.barrier()
@@ -201,8 +189,7 @@ class WaveLearner:
                     if self.is_master and self.distributed:
                         self.save_to_checkpoint()
                         print("Ending training...")
-                    if self.distributed:    
-                        dist.barrier()
+                    dist.barrier()
                     exit(0)
 
     def train_step(self, features: Dict[str, torch.Tensor]):

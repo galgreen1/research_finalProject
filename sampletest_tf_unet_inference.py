@@ -1,9 +1,4 @@
 import tensorflow as tf
-
-gpus = tf.config.list_physical_devices('GPU')
-tf.config.set_visible_devices(gpus[0], 'GPU')
-tf.config.experimental.set_memory_growth(gpus[0], True)
-#mirrored_strategy = tf.distribute.MirroredStrategy(devices=["/gpu:0"])
 import os, sys
 import numpy as np
 import random
