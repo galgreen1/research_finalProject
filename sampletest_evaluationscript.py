@@ -15,7 +15,7 @@ qam_symbol = np.array([-1 - 1j, -1 + 1j, 1 - 1j, 1 + 1j])
 
 
 # Normalize QAM symbols (we scale them to unit energy)
-#sigma_SNR = [math.sqrt(1/30),math.sqrt(1/20),math.sqrt(1/10)]  # SNR we will make
+#sigma_SNR = [math.sqrt(1/10),math.sqrt(1/20),math.sqrt(1/30)]  # SNR we will make
 sigma_SNR = [math.sqrt(1/10)]
 
 # for a whole signal compute the closet 4QAM
@@ -238,39 +238,39 @@ def run_demod_test(soi_type,testset_identifier,M,net):
     a1=save_error_check[0]
     # a2=save_error_check[1]
     # a3=save_error_check[2]
-    #print(f'x:{x1}')
+    # #print(f'x:{x1}')
     # x2=save_error[1]
     # x3=save_error[2]
     plt.figure(figsize=(10, 6))
     #plt.plot(ps_ratios_db, x1, label=f"Com: SNR=80dB M=1  ",color='blue')
 
-    plt.plot(ps_ratios_db, x1, label=f"Com: SNR=30dB M={M} network={net} ",color='blue')
+    plt.plot(ps_ratios_db, x1, label=f"Com: SNR=10dB M={M} network={net} ",color='blue')
     # plt.plot(ps_ratios_db, x2, label=f"Com: SNR=20dB M={M} network={net}", color='green')
-    # plt.plot(ps_ratios_db, x3,  label=f"Com: SNR=10dB M={M}  network={net}", color='red')
+    # plt.plot(ps_ratios_db, x3,  label=f"Com: SNR=30dB M={M}  network={net}", color='red')
 
-    plt.plot(ps_ratios_db, a1, label=f"Com: SNR=30dB M={M}  simulation",color='blue',linestyle='--')
+    plt.plot(ps_ratios_db, a1, label=f"Com: SNR=10dB M={M}  simulation",color='blue',linestyle='--')
     # plt.plot(ps_ratios_db, a2, label=f"Com: SNR=20dB M={M} simulation", color='green',linestyle='--')
-    # plt.plot(ps_ratios_db, a3,  label=f"Com: SNR=10dB M={M}  simulation", color='red',linestyle='--')
+    # plt.plot(ps_ratios_db, a3,  label=f"Com: SNR=30dB M={M}  simulation", color='red',linestyle='--')
     #print(f'x1:{x1}')
 
     plt.yscale("log")
     plt.xlim(0, 30)
     plt.ylim(1e-7, 1)
-    plt.title("BER as a Function of $P_s/(1-P_s)")
-    plt.xlabel("$P_s/(1-P_s)$ (dB)")
+    plt.title(r"BER as a Function of $P_s/(1-P_s)$")
+    plt.xlabel(r"$P_s/(1-P_s)$ (dB)")
     plt.ylabel("BER")
     plt.grid(which="both")
     plt.legend()
     plt.show()
     # and save results  
     
-    output_path = f"/home/dsi/galgreen/tmp/rfchallenge/graphs/ber_plot_M={M}_net={net}_check.png"
+    output_path = f"/home/dsi/galgreen/tmp/rfchallenge/graphs/ber_plot_M={M}_net={net}_SNR=10.png"
     os.makedirs(os.path.dirname(output_path), exist_ok=True)
     plt.savefig(output_path, dpi=300, bbox_inches='tight')
-    error_save_path = f"/home/dsi/galgreen/tmp/rfchallenge/graphs/save_error_M={M}_net={net}.npy"
+    error_save_path = f"/home/dsi/galgreen/tmp/rfchallenge/graphs/save_error_M={M}_net={net}_SNR=10.npy"
     np.save(error_save_path, save_error)
     print(f"Saved BER matrix to: {error_save_path}")
-    error_check_save_path = f"/home/dsi/galgreen/tmp/rfchallenge/graphs/save_error_check_M={M}_net={net}.npy"
+    error_check_save_path = f"/home/dsi/galgreen/tmp/rfchallenge/graphs/save_error_check_M={M}_net={net}_SNR=10.npy"
     np.save(error_check_save_path, save_error_check)
     print(f"Saved BER matrix to: {error_check_save_path}")
     plt.close()
@@ -279,7 +279,7 @@ def run_demod_test(soi_type,testset_identifier,M,net):
 if __name__ == "__main__":
     parser = argparse.ArgumentParser(description='check output')
     #parser.add_argument('-l', '--sig_len', default=3200, type=int)
-    parser.add_argument('-m', '--M_symbols', default=1, type=int)
+    parser.add_argument('-m', '--M_symbols', default=50, type=int)
     parser.add_argument('-d', '--dataset', default='test', help='')
     parser.add_argument('--soi_sig_type',default='OFDMQPSK', help='')
     parser.add_argument('--network',default='unet', help='')

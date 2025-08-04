@@ -6,6 +6,7 @@ npydataset1/
 model/
 wandb/
 torchmodels/
+torchmodels1/
 torchmodels_old/
 
 # Byte-compiled / optimized / DLL files

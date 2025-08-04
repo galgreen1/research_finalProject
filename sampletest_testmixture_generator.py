@@ -277,7 +277,7 @@ def simulation(sigma, m, l,foldername):
     ber_com_results = []
 
     ber_sen_results = []
-    times = 6000
+    times = 8500
     tot=times*len(ps_ratios)
     with tqdm(total=tot, desc="Total Progress") as pbar:
         for ps_ratio in ps_ratios:
@@ -400,7 +400,7 @@ def simulation(sigma, m, l,foldername):
 def graph1():
     parser = argparse.ArgumentParser(description='Generate Synthetic Dataset')
     #parser.add_argument('-l', '--sig_len', default=64, type=int)
-    parser.add_argument('-m', '--M_symbols', default=1, type=int)
+    parser.add_argument('-m', '--M_symbols', default=50, type=int)
     #parser.add_argument('-b', '--n_per_batch', default=3000, type=int, help='')
     parser.add_argument('-d', '--dataset', default='test', help='')
     parser.add_argument('-v', '--verbosity', default=1, help='')

@@ -33,7 +33,7 @@ from tensorflow.keras.callbacks import ModelCheckpoint, EarlyStopping
 #mirrored_strategy = tf.distribute.MirroredStrategy(devices=["/gpu:0", "/gpu:1"])
 
 
-bsz = 64
+bsz = 16
 
 
 all_datasets = ['create_simulations_dataset_m_1','create_simulations_dataset_m_50']
@@ -59,7 +59,7 @@ def train_script(idx):
         return mixture, target
     
     wandb.init(
-    project="rfchallenge-unet-train-M=1",   
+    project="rfchallenge-unet-train-M=50",   
     name=f"{dataset_type}",
     config={
         "model": "UNet"
@@ -83,13 +83,13 @@ def train_script(idx):
 
     window_len = 64
     earlystopping = EarlyStopping(monitor='val_loss', patience=100)
-    model_pathname = os.path.join('models/create_simulations_dataset_m_1_unet_M_1', 'checkpoint')
+    model_pathname = os.path.join('models/create_simulations_dataset_m_50_unet_M_50', 'checkpoint')
     checkpoint = ModelCheckpoint(filepath=model_pathname, monitor='val_loss', verbose=1, save_best_only=True, mode='min', save_weights_only=True)
     #checkpoint = ModelCheckpoint(filepath=model_pathname, monitor='val_loss', verbose=0, save_best_only=False, mode='min', save_weights_only=True)
     with mirrored_strategy.scope():
         nn_model = unet.get_unet_model((window_len, 2), k_sz=3, long_k_sz=101, k_neurons=32, lr=0.0003)
         #nn_model = unet.get_unet_model((window_len, 2), k_sz=3, long_k_sz=101, k_neurons=32, lr=0.0006)
-        nn_model.load_weights('/home/dsi/galgreen/tmp/rfchallenge/models/create_simulations_dataset_m_1_unet_M_1/checkpoint')
+        nn_model.load_weights('/home/dsi/galgreen/tmp/rfchallenge/models/create_simulations_dataset_m_50_unet_M_50/checkpoint')
         nn_model.fit(ds_train, epochs=2000, batch_size=bsz, shuffle=True, verbose=1, validation_data=ds_val, callbacks=[
     checkpoint,
     earlystopping,

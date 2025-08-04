@@ -17,12 +17,8 @@ sigma_SNR = [math.sqrt(1/30), math.sqrt(1/20), math.sqrt(1/10)]
 
 
 def calculate_ps_ratios_db():
-    """
-    Return (ps_ratios, ps_ratios_db):
-      ps_ratios_db: 30 points between 0 and 30 dB
-      ps_ratios: linear ratios corresponding to those dB values
-    """
-    ps_db = np.linspace(0, 30, 30)
+   
+    ps_db = np.linspace(0, 30, 24)
     ps = 10 ** (ps_db / 10)
     return ps, ps_db
 
@@ -35,11 +31,11 @@ def compute_P(ps_ratio):
     return 0.0 if ps_ratio == 0 else ps_ratio / (1 + ps_ratio)
 
 
-def run_inference(foldername: str, soi_type: str):
+def run_inference(foldername: str, soi_type: str,M):
     # Load config and model checkpoint
     base_cfg = OmegaConf.load("src/configs/wavenet.yml")
     cfg: Config = Config(**parse_configs(base_cfg, None))
-    cfg.model_dir = f"torchmodels/dataset_{soi_type.lower()}_mixture_wavenet"
+    cfg.model_dir = f"torchmodels/dataset_{soi_type.lower()}_mixture_wavenet_M={M}"
 
     device = torch.device("cuda" if torch.cuda.is_available() else "cpu")
     model = Wave(cfg.model).to(device)
@@ -92,18 +88,16 @@ def run_inference(foldername: str, soi_type: str):
 
 if __name__ == "__main__":
     parser = argparse.ArgumentParser(description="Run WaveNet inference on RF mixtures")
-    parser.add_argument("-m", "--M_symbols", type=int, default=50,
+    parser.add_argument("-m", "--M_symbols", type=int, default=1,
                         help="Number of mixture symbols (for folder naming)")
-    # parser.add_argument("-d", "--dataset", type=str, default="test",
-    #                     help="Dataset identifier")
-    parser.add_argument("-t", "--test_set", type=str, default="TestSet",
-                        help="Test set identifier")
+    parser.add_argument("-d", "--dataset", type=str, default="test",
+                        help="Dataset identifier")
     parser.add_argument("--soi_sig_type", type=str, default="OFDMQPSK",
                         help="Signal-of-interest type")
     args = parser.parse_args()
 
     folder = os.path.join(
         "dataset",
-        f"Dataset_{args.soi_sig_type}_{args.dataset}_{args.test_set}_M={args.M_symbols}"
+        f"Dataset_{args.soi_sig_type}_{args.dataset}_Mixture_M={args.M_symbols}"
     )
-    run_inference(folder, args.soi_sig_type)
+    run_inference(folder, args.soi_sig_type,args.M_symbols)
