@@ -22,6 +22,7 @@ for Wavenet:
 python /home/dsi/galgreen/tmp/rfchallenge/train_torchwavenet.py   --sigindex 0   --config src/configs/wavenet.yml   --M [num]   ""
 
 python sampletest_evaluationscript.py -m[num] -network[unet or Wavenet]
+or python faster_evaluation.py -m[num] -network[unet or Wavenet] for faster evaluation
 
 # Helper functions for simulation graph:
 python rf_simulations_graphs
