@@ -43,7 +43,11 @@ python train_unet_model.py [index]
 python train_torchwavenet.py -m[num]
 
 
-Trained model weights for the UNet and WaveNet can be obtained here: 
+
+
+Trained model weights for the UNet and WaveNet can be obtained under models folder
+Final outputs under outputs folder
+
 
 Email:galgreen03@gmail.com
 
